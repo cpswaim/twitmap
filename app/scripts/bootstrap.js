@@ -3,11 +3,12 @@ require.config({
   paths: {
     angular: '../../bower_components/angular/angular',
     angularRoute: '../../bower_components/angular-route/angular-route',
-    // angularCookies: '../../bower_components/angular-cookies/angular-cookies',
-    // angularSanitize: '../../bower_components/angular-sanitize/angular-sanitize',
-    // angularResource: '../../bower_components/angular-resource/angular-resource',
-    // angularMocks: '../../bower_components/angular-mocks/angular-mocks',
-    text: '../../bower_components/requirejs-text/text'
+    text: '../../bower_components/requirejs-text/text',
+    d3: '../../bower_components/d3/d3.min',
+    topojson : '//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min',
+    'd3.geo.projection': "http://d3js.org/d3.geo.projection.v0.min",
+    datamaps:'lib/datamaps.world',
+    '$':'../../bower_components/jQuery/dist/jquery.min'
   },
   shim: {
     'angular' : {'exports' : 'angular'},
@@ -18,29 +19,32 @@ require.config({
     'angularMocks': {
       deps:['angular'],
       'exports':'angular.mock'
-    }
+    },
+    'topojson':{
+        deps:['d3']
+    },
+    'd3.geo.projection':{
+        deps:['d3']
+    },
+    'datamaps' : {'exports' : 'Datamap', deps:['d3', 'topojson']},
+    '$':{'exports':'jQuery'}
   },
   priority: [
     'angular'
   ]
 });
 
-//http://code.angularjs.org/1.2.1/docs/guide/bootstrap#overview_deferred-bootstrap
-//window.name = 'NG_DEFER_BOOTSTRAP!';
-
 require([
   'angular',
   'app',
+  'd3',
   'angularRoute',
   'map/map'
-  // 'angularCookies',
-  // 'angularSanitize',
-  // 'angularResource'
-], function(angular, app) {
+], function(angular, app, d3) {
   'use strict';
-  // /* jshint ignore:start */
-  // var $html = angular.element(document.getElementsByTagName('html')[0]);
-  // /* jshint ignore:end */
+
+  window.d3 = d3;
+
   angular.element().ready(function() {
     angular.bootstrap(document, [app.name]);
   });
